@@ -1,7 +1,8 @@
-django
-gunicorn
-psycopg2-binary
-requests==2.20.0
-python-dotenv
-pytest
-pytest-django
+django==5.0.6
+gunicorn==22.0.0
+psycopg2-binary==2.9.9
+requests==2.32.3
+python-dotenv==1.0.1
+dj-database-url==2.1.0
+pytest==8.2.2
+pytest-django==4.8.0

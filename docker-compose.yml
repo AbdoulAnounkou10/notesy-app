@@ -1,0 +1,40 @@
+
+services:
+  # The Postgres database
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: notesy
+      POSTGRES_USER: notesy
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # Named volume so data persists when containers restart
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Check if Postgres is actually ready to accept connections
+      test: ["CMD-SHELL", "pg_isready -U notesy"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # The Django application
+  web:
+    build: .
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DATABASE_URL=postgres://notesy:${POSTGRES_PASSWORD}@db:5432/notesy
+      - ALLOWED_HOSTS=localhost,127.0.0.1,10.0.0.46
+      - DJANGO_SETTINGS_MODULE=notesy.settings
+      - DEBUG=False
+    
+    # Don't start the app until Postgres passes its healthcheck
+    # Without this the app crashes on boot trying to connect too early
+    ports:
+    - "10.0.0.46:8080:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+# Named volumes persist data outside the container lifecycle
+volumes:
+  pgdata:

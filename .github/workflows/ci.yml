@@ -65,7 +65,7 @@ jobs:
           context: .
           push: true
           tags: |
-              ghcr.io/${{ github.repository_owner | lower }}/notesy-app:sha-${{ github.sha }}
-              ghcr.io/${{ github.repository_owner | lower }}/notesy-app:latest
+              ghcr.io/abdoulanounkou10/notesy-app:sha-${{ github.sha }}
+              ghcr.io/abdoulanounkou10/notesy-app:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
